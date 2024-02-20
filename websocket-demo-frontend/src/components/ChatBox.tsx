@@ -11,6 +11,7 @@ export default function ChatBox() {
     const [typedMessage, setTypedMessage] = useState<string>("")
     const username = useAppSelector(selectUsername)
     const webSocketState = useAppSelector(selectWebSocket)
+    let count;
     return (
         <>
             <div className="bg-white w-full rounded-lg shadow-lg p-4">
@@ -18,7 +19,15 @@ export default function ChatBox() {
                     <h1 className="text-3xl font-extrabold text-gray-800">Group Chat</h1>
                     <p className="text-gray-600">Welcome to the chat room!</p>
                     <p>
-                        Online persons : <strong>fix me pls</strong>
+                        {
+                            webSocketState.messages?.map((message) => {
+                                if (message.type === messageType.JOIN || message.type === messageType.LEAVE) {
+                                    count = message.countUser;
+                                }
+                                return "" ;
+                            })
+                        }
+                        Online persons : <strong>{count}</strong>
                     </p>
                 </div>
 
@@ -28,7 +37,7 @@ export default function ChatBox() {
                             return (
                                 message.type === messageType.JOIN || message.type === messageType.LEAVE ? (
                                     <JoinLeaveMessage sender={message.sender} messageType={message.type} key={index} timestamp={message.timestamp}/>
-                                    ):(
+                                ):(
                                     <Chat key={index} content={message.content} sender={message.sender} isMe={username === message.sender} timestamp={message.timestamp}/>
                                 )
                             )
@@ -39,10 +48,10 @@ export default function ChatBox() {
                 <div>
                     <form  className="mt-4 flex items-center"
                            onSubmit={(e) => {
-                              e.preventDefault()
-                                sendMessage(typedMessage, username)
-                                setTypedMessage("")
-                          }}
+                               e.preventDefault()
+                               sendMessage(typedMessage, username)
+                               setTypedMessage("")
+                           }}
                     >
                         <input type="text" placeholder="Type your message..."
                                className="flex-1 border rounded-md p-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 overflow-auto"

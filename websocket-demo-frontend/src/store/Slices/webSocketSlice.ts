@@ -8,6 +8,7 @@ export enum messageType {
     LEAVE = 'LEAVE'
 }
 interface webSocketMessage {
+    countUser: any;
     sender: string;
     content: string;
     timestamp: string;
